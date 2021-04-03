@@ -271,6 +271,8 @@
 "Host : port /\nTCP port" = "Host : port /\nTCP port";
 "MAC Address" = "MAC Address";
 "Username and Password" = "Username and Password";
+"SSL" = "SSL";
+"Self-signed certificate" = "Self-signed certificate";
 "Prefer posters for TV shows" = "Prefer posters for TV shows";
 "Find XBMC" = "Find Kodi";
 "Save" = "Save";

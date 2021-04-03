@@ -37,6 +37,7 @@
  */
 
 #import "DSJSONRPC.h"
+#import "GlobalData.h"
 
 #ifdef __OBJC_GC__
 #error Demiurgic JSON-RPC does not support Objective-C Garbage Collection
@@ -230,7 +231,15 @@
 #pragma mark - NSURLConnection Delegate Methods
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"XBMCServerAuthenticationFailed" object:nil userInfo:nil];
+    if (![GlobalData getInstance].allowSelfSignedCert) {
+        if ([challenge.sender respondsToSelector:@selector(performDefaultHandlingForAuthenticationChallenge:)])
+            [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+        return;
+    }
+    
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+        [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+    [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {

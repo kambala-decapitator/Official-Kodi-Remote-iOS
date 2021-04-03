@@ -4497,6 +4497,8 @@ int Wake_on_LAN(char *ip_broadcast,const char *wake_mac){
     obj.serverIP = item[@"serverIP"];
     obj.serverPort = item[@"serverPort"];
     obj.tcpPort = [item[@"tcpPort"] intValue];
+    obj.useSsl = [item[@"useSsl"] boolValue];
+    obj.allowSelfSignedCert = [item[@"allowSelfSignedCert"] boolValue];
 }
 
 -(void)saveServerList{

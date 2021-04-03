@@ -33,6 +33,10 @@
                 <outlet property="preferLabel" destination="17" id="fjs-rC-uyf"/>
                 <outlet property="preferTVPostersUI" destination="56" id="57"/>
                 <outlet property="saveButton" destination="37" id="Ttx-kq-fCl"/>
+                <outlet property="selfSignedCertLabel" destination="HbQ-Ro-zaW" id="30I-ih-2oE"/>
+                <outlet property="selfSignedCertSwitch" destination="i5U-rl-Kpr" id="Svw-tA-ogA"/>
+                <outlet property="sslLabel" destination="HNG-6X-TyO" id="I0o-dy-d6R"/>
+                <outlet property="sslSwitch" destination="0YL-nF-1i6" id="h4B-cq-zhr"/>
                 <outlet property="startDiscover" destination="39" id="45"/>
                 <outlet property="tcpPortUI" destination="93" id="96"/>
                 <outlet property="tipView" destination="z1M-ev-5kX" id="pYU-ca-117"/>
@@ -145,7 +149,7 @@ TCP port</string>
                             <size key="shadowOffset" width="1" height="1"/>
                         </label>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Prefer posters for TV shows" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="17">
-                            <rect key="frame" x="12" y="127" width="201" height="22"/>
+                            <rect key="frame" x="12" y="177" width="201" height="22"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
                             <color key="textColor" red="0.89980614185333252" green="0.89980614185333252" blue="0.89980614185333252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -317,7 +321,7 @@ TCP port</string>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </activityIndicatorView>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="37">
-                            <rect key="frame" x="214" y="166" width="86" height="28"/>
+                            <rect key="frame" x="214" y="216" width="86" height="28"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                             <size key="titleShadowOffset" width="1" height="1"/>
@@ -338,7 +342,7 @@ TCP port</string>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="39">
-                            <rect key="frame" x="87" y="166" width="104" height="28"/>
+                            <rect key="frame" x="87" y="216" width="104" height="28"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                             <inset key="titleEdgeInsets" minX="4" minY="0.0" maxX="4" maxY="0.0"/>
@@ -436,10 +440,35 @@ TCP port</string>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
                         <switch opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="56">
-                            <rect key="frame" x="232" y="125" width="51" height="31"/>
+                            <rect key="frame" x="232" y="175" width="51" height="31"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             <inset key="insetFor6xAndEarlier" minX="10" minY="0.0" maxX="-10" maxY="0.0"/>
                         </switch>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SSL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HNG-6X-TyO">
+                            <rect key="frame" x="14" y="137" width="24" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0YL-nF-1i6" userLabel="SSL">
+                            <rect key="frame" x="46" y="130" width="49" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <connections>
+                                <action selector="sslToggled:" destination="-1" eventType="valueChanged" id="gdz-Be-emn"/>
+                            </connections>
+                        </switch>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="i5U-rl-Kpr" userLabel="Self-signed certificate">
+                            <rect key="frame" x="253" y="130" width="49" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </switch>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Self-signed certificate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HbQ-Ro-zaW">
+                            <rect key="frame" x="110" y="137" width="135" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>

@@ -129,6 +129,8 @@
         @"serverMacAddress": macAddress,
         @"preferTVPosters": @(preferTVPostersUI.on),
         @"tcpPort": tcpPortUI.text,
+        @"useSsl": @(sslSwitch.on),
+        @"allowSelfSignedCert": @(selfSignedCertSwitch.on),
     };
     if (self.detailItem==nil){
         [[AppDelegate instance].arrayServerList addObject:serverInfo];
@@ -139,6 +141,10 @@
     }
     [[AppDelegate instance] saveServerList];
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)sslToggled:(UISwitch *)sender {
+    selfSignedCertSwitch.enabled = sender.on;
 }
 
 #pragma mark - Helper
@@ -485,6 +491,8 @@
     [hostLabel setText:NSLocalizedString(@"Host : port /\nTCP port", nil)];
     [macLabel setText:NSLocalizedString(@"MAC Address", nil)];
     [userLabel setText:NSLocalizedString(@"Username and Password", nil)];
+    [sslLabel setText:NSLocalizedString(@"SSL", nil)];
+    [selfSignedCertLabel setText:NSLocalizedString(@"Self-signed certificate", nil)];
     [preferLabel setText:NSLocalizedString(@"Prefer posters for TV shows", nil)];
     [noInstancesLabel setText:NSLocalizedString(@"No XBMC instances were found :(", nil)];
     [findLabel setText:NSLocalizedString(@"\"Find XBMC\" requires XBMC server option\n\"Announce these services to other systems via Zeroconf\" enabled", nil)];

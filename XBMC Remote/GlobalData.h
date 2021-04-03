@@ -17,6 +17,8 @@
 @property(nonatomic) int tcpPort;
 @property(nonatomic,retain) NSString *serverPort;
 @property(nonatomic,retain) NSString *serverHWAddr;
+@property(nonatomic) BOOL useSsl;
+@property(nonatomic) BOOL allowSelfSignedCert;
 @property(nonatomic) BOOL preferTVPosters;
 
 + (instancetype)getInstance;

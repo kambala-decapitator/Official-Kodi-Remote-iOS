@@ -24,6 +24,8 @@
     IBOutlet UITextField *mac_3_UI;
     IBOutlet UITextField *mac_4_UI;
     IBOutlet UITextField *mac_5_UI;
+    __weak IBOutlet UISwitch *sslSwitch;
+    __weak IBOutlet UISwitch *selfSignedCertSwitch;
     IBOutlet UISwitch *preferTVPostersUI;
     IBOutlet UITextField *tcpPortUI;
     NSMutableArray *services;
@@ -39,6 +41,8 @@
     IBOutlet UILabel *hostLabel;
     IBOutlet UILabel *macLabel;
     IBOutlet UILabel *userLabel;
+    __weak IBOutlet UILabel *sslLabel;
+    __weak IBOutlet UILabel *selfSignedCertLabel;
     IBOutlet UILabel *preferLabel;
     IBOutlet UILabel *noInstancesLabel;
     IBOutlet UILabel *findLabel;

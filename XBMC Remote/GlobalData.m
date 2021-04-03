@@ -22,7 +22,7 @@
 - (NSString *)baseServerUrlWithProtocol:(BOOL)addProtocol credentials:(BOOL)addCredentials {
     __auto_type url = [NSMutableString new];
     if (addProtocol)
-        [url appendString:@"http://"];
+        [url appendFormat:@"http%@://", self.useSsl ? @"s" : @""];
     if (addCredentials && self.serverUser.length > 0)
         [url appendFormat:@"%@:%@@", self.serverUser, self.serverPass ?: @""];
     return [url stringByAppendingFormat:@"%@:%@", self.serverIP, self.serverPort];
@@ -36,6 +36,8 @@
     self.serverPort = @"";
     self.serverHWAddr = @"";
     self.tcpPort = 0;
+    self.useSsl = NO;
+    self.allowSelfSignedCert = NO;
 }
 
 @end
