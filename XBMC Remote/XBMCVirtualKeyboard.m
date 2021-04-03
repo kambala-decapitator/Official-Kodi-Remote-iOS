@@ -220,12 +220,8 @@
 }
 
 -(void)sendXbmcHttp:(NSString *) command{
-    GlobalData *obj=[GlobalData getInstance];
-    NSString *userPassword=[obj.serverPass isEqualToString:@""] ? @"" : [NSString stringWithFormat:@":%@", obj.serverPass];
-    
-    NSString *serverHTTP=[NSString stringWithFormat:@"http://%@%@@%@:%@/xbmcCmds/xbmcHttp?command=%@", obj.serverUser, userPassword, obj.serverIP, obj.serverPort, command];
-    NSURL *url = [NSURL  URLWithString:serverHTTP];
-    [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+    NSURL *url = [NSURL URLWithString:[[[GlobalData getInstance] baseServerUrlWithProtocol:YES credentials:YES] stringByAppendingFormat:@"/xbmcCmds/xbmcHttp?command=%@", command]];
+    [[[NSURLSession sharedSession] dataTaskWithURL:url] resume];
 }
 
 #pragma mark - lifecycle

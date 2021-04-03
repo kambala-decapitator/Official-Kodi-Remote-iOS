@@ -8,26 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GlobalData : NSObject{    
-    NSString *serverDescription; 
-    NSString *serverUser; 
-    NSString *serverPass; 
-    NSString *serverIP; 
-    NSString *serverPort;
-    int tcpPort;
-    NSString *serverHWAddr; 
-    BOOL preferTVPosters;
+@interface GlobalData : NSObject
 
-    
-}    
-@property(nonatomic,retain)NSString *serverDescription;    
-@property(nonatomic,retain)NSString *serverUser;    
-@property(nonatomic,retain)NSString *serverPass;    
-@property(nonatomic,retain)NSString *serverIP;
-@property int tcpPort;
-@property(nonatomic,retain)NSString *serverPort; 
-@property(nonatomic,retain)NSString *serverHWAddr; 
-@property BOOL preferTVPosters;
+@property(nonatomic,retain) NSString *serverDescription;
+@property(nonatomic,retain) NSString *serverUser;
+@property(nonatomic,retain) NSString *serverPass;
+@property(nonatomic,retain) NSString *serverIP;
+@property(nonatomic) int tcpPort;
+@property(nonatomic,retain) NSString *serverPort;
+@property(nonatomic,retain) NSString *serverHWAddr;
+@property(nonatomic) BOOL preferTVPosters;
 
-+(GlobalData*)getInstance;    
++ (instancetype)getInstance;
+
+- (NSString *)baseServerUrlWithProtocol:(BOOL)addProtocol credentials:(BOOL)addCredentials;
+- (void)reset;
+
 @end  

@@ -359,7 +359,7 @@ int count=0;
             choosedMenuItem.mainLabel=actorName;
             [MenuItem setEnableSection:NO];
             [MenuItem setMainButtons:nil];
-            if ([AppDelegate instance].obj.preferTVPosters==YES){
+            if ([GlobalData getInstance].preferTVPosters){
                 thumbWidth = PHONE_TV_SHOWS_POSTER_WIDTH;
                 tvshowHeight = PHONE_TV_SHOWS_POSTER_HEIGHT;
             }
@@ -1388,12 +1388,8 @@ int h=0;
         parentalRatingLabel.frame = newFrame;        
         shiftParentalRating = parentalRatingLabel.frame.size.height;
     }
-    
-    GlobalData *obj = [GlobalData getInstance];
-    NSString *serverURL = [NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
-    if ([AppDelegate instance].serverVersion > 11){
-        serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
-    }
+
+    NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
     frame = label6.frame;
     frame.origin.y = frame.origin.y + summaryLabel.frame.size.height + shiftParentalRating - 40;
     label6.frame = frame;
@@ -1493,7 +1489,7 @@ int h=0;
             clearLogoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, clearLogoWidth, clearLogoHeight)];
             [[clearLogoImageView layer] setMinificationFilter:kCAFilterTrilinear];
             [clearLogoImageView setContentMode:UIViewContentModeScaleAspectFit];
-            NSString *stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [[item objectForKey:@"clearlogo"] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+            NSString *stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [[item objectForKey:@"clearlogo"] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
             [clearLogoImageView setImageWithURL:[NSURL URLWithString:stringURL] placeholderImage:[UIImage imageNamed:@"blank.png"]];
             [clearlogoButton addSubview:clearLogoImageView];
         }
@@ -1689,12 +1685,8 @@ int h=0;
     if (cell == nil){
         cell = [[ActorCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier castWidth:castWidth castHeight:castHeight size:size castFontSize:castFontSize];
     }
-    GlobalData *obj = [GlobalData getInstance];
-    NSString *serverURL = [NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
-    if ([AppDelegate instance].serverVersion > 11){
-        serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
-    }
-    NSString *stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [[[cast objectAtIndex:indexPath.row] objectForKey:@"thumbnail"] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+    NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
+    NSString *stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [[[cast objectAtIndex:indexPath.row] objectForKey:@"thumbnail"] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
     [cell.actorThumbnail setImageWithURL:[NSURL URLWithString:stringURL] placeholderImage:[UIImage imageNamed:@"person.png"] andResize:CGSizeMake(castWidth, castHeight)];
     cell.actorName.text = [[cast objectAtIndex:indexPath.row] objectForKey:@"name"] == nil ? [self.detailItem objectForKey:@"label"] : [[cast objectAtIndex:indexPath.row] objectForKey:@"name"];
     if ([[[cast objectAtIndex:indexPath.row] objectForKey:@"role"] length] != 0){
@@ -1750,10 +1742,7 @@ int h=0;
         [jsonRPC callMethod:@"Files.PrepareDownload" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:[item objectForKey:@"file"], @"path", nil] onCompletion:^(NSString *methodName, NSInteger callId, id methodResult, DSJSONRPCError *methodError, NSError* error) {
             if (error==nil && methodError==nil){
                 if( [methodResult count] > 0){
-                    GlobalData *obj=[GlobalData getInstance];
-                    NSString *userPassword = [[AppDelegate instance].obj.serverPass isEqualToString:@""] ? @"" : [NSString stringWithFormat:@":%@", [AppDelegate instance].obj.serverPass];
-                    NSString *serverURL = [NSString stringWithFormat:@"%@%@@%@:%@", obj.serverUser, userPassword, obj.serverIP, obj.serverPort];
-                    NSString *stringURL = [NSString stringWithFormat:@"vlc://%@://%@/%@",(NSArray*)[methodResult objectForKey:@"protocol"], serverURL, [(NSDictionary*)[methodResult objectForKey:@"details"] objectForKey:@"path"]];
+                    NSString *stringURL = [NSString stringWithFormat:@"vlc://%@://%@/%@", methodResult[@"protocol"], [[GlobalData getInstance] baseServerUrlWithProtocol:NO credentials:YES], methodResult[@"details"][@"path"]];
                     [Utilities SFloadURL:stringURL fromctrl:self];
                     [activityIndicatorView stopAnimating];
                     self.navigationItem.rightBarButtonItem.enabled=YES;

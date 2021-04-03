@@ -979,7 +979,7 @@
     if (mutableProperties != nil) {
         [mutableParameters setObject:mutableProperties forKey:@"properties"];
     }
-    if ([[parameters objectForKey:@"blackTableSeparator"] boolValue] == YES && [AppDelegate instance].obj.preferTVPosters == NO){
+    if ([[parameters objectForKey:@"blackTableSeparator"] boolValue] && ![GlobalData getInstance].preferTVPosters){
         blackTableSeparator = YES;
         dataList.separatorColor = [Utilities getGrayColor:38 alpha:1];
     }
@@ -3752,10 +3752,7 @@ NSIndexPath *selected;
         [jsonRPC callMethod:@"Files.PrepareDownload" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:[item objectForKey:@"file"], @"path", nil] onCompletion:^(NSString *methodName, NSInteger callId, id methodResult, DSJSONRPCError *methodError, NSError* error) {
             if (error==nil && methodError==nil){
                 if( [methodResult count] > 0){
-                    GlobalData *obj=[GlobalData getInstance];
-                    NSString *userPassword = [[AppDelegate instance].obj.serverPass isEqualToString:@""] ? @"" : [NSString stringWithFormat:@":%@", [AppDelegate instance].obj.serverPass];
-                    NSString *serverURL = [NSString stringWithFormat:@"%@%@@%@:%@", obj.serverUser, userPassword, obj.serverIP, obj.serverPort];
-                    NSString *stringURL = [NSString stringWithFormat:@"vlc://%@://%@/%@",(NSArray*)[methodResult objectForKey:@"protocol"], serverURL, [(NSDictionary*)[methodResult objectForKey:@"details"] objectForKey:@"path"]];
+                    NSString *stringURL = [NSString stringWithFormat:@"vlc://%@://%@/%@", methodResult[@"protocol"], [[GlobalData getInstance] baseServerUrlWithProtocol:NO credentials:YES], methodResult[@"details"][@"path"]];
                     [Utilities SFloadURL:stringURL fromctrl:self];
                     [queuing stopAnimating];
                 }
@@ -4295,7 +4292,6 @@ NSIndexPath *selected;
                                      newProperties, @"properties",
                                      [item objectForKey:itemid], itemid,
                                      nil];
-    GlobalData *obj=[GlobalData getInstance];
     [jsonRPC 
      callMethod:methodToCall
      withParameters:newParameters
@@ -4314,11 +4310,9 @@ NSIndexPath *selected;
                  if (((NSNull *)videoLibraryMovieDetail == [NSNull null]) || videoLibraryMovieDetail == nil){
                      return; // something goes wrong
                  }
-                 NSString *serverURL= @"";
+                 NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
                  int secondsToMinute = 1;
-                 serverURL = [NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
                  if ([AppDelegate instance].serverVersion > 11){
-                     serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
                      secondsToMinute = 60;
                  }
                  NSString *label=[NSString stringWithFormat:@"%@",[videoLibraryMovieDetail objectForKey:[mainFields objectForKey:@"row1"]]];
@@ -4385,10 +4379,10 @@ NSIndexPath *selected;
                  NSString *fanartURL=@"";
                  NSString *stringURL = @"";
                  if (![thumbnailPath isEqualToString:@""] && ![thumbnailPath isEqualToString:@"(null)"]){
-                     stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                     stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                  }
                  if (![fanartPath isEqualToString:@""]){
-                     fanartURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [fanartPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                     fanartURL = [NSString stringWithFormat:@"%@%@", serverURL, [fanartPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                  }
                  NSString *filetype=@"";
                  if ([videoLibraryMovieDetail objectForKey:@"filetype"]!=nil){
@@ -4540,9 +4534,7 @@ NSIndexPath *selected;
         }
     }
 
-    GlobalData *obj=[GlobalData getInstance];
     [self alphaView:noFoundView AnimDuration:0.2 Alpha:0.0];
-//    NSLog(@"START");
     debugText.text = [NSString stringWithFormat:NSLocalizedString(@"METHOD\n%@\n\nPARAMETERS\n%@\n",nil), methodToCall, [[[NSString stringWithFormat:@"%@", parameters] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]];
     elapsedTime = 0;
     startTime = [NSDate timeIntervalSinceReferenceDate];
@@ -4605,11 +4597,9 @@ NSIndexPath *selected;
                      recordingListView = NO;
                  }
                  NSArray *videoLibraryMovies = [methodResult objectForKey:itemid];
-                 NSString *serverURL= @"";
-                 serverURL = [NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
+                 NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
                  int secondsToMinute = 1;
                  if ([AppDelegate instance].serverVersion > 11){
-                     serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
                      if ([self.detailItem noConvertTime]) secondsToMinute = 60;
                  }
                  if ([videoLibraryMovies isKindOfClass:[NSArray class]]) {
@@ -4673,10 +4663,10 @@ NSIndexPath *selected;
                          NSString *stringURL = @"";
                          
                          if (![thumbnailPath isEqualToString:@""] && thumbnailPath != nil){
-                             stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                             stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                          }
                          if (![fanartPath isEqualToString:@""]){
-                             fanartURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [fanartPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                             fanartURL = [NSString stringWithFormat:@"%@%@", serverURL, [fanartPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                          }
                          NSString *filetype=@"";
                          if ([[videoLibraryMovies objectAtIndex:i] objectForKey:@"filetype"]!=nil){
@@ -5624,7 +5614,7 @@ NSIndexPath *selected;
         [dataList setSeparatorInset:UIEdgeInsetsMake(0, 18, 0, 0)];
     }
     else if ([[methods objectForKey:@"tvshowsView"] boolValue] == YES){
-        tvshowsView = [AppDelegate instance].serverVersion > 11 && [AppDelegate instance].obj.preferTVPosters == NO;
+        tvshowsView = [AppDelegate instance].serverVersion > 11 && ![GlobalData getInstance].preferTVPosters;
         [self setTVshowThumbSize];
     }
     else if ([[methods objectForKey:@"channelGuideView"] boolValue] == YES){
@@ -5636,7 +5626,7 @@ NSIndexPath *selected;
     }
     
     tableViewSearchBarColor = searchBarColor;
-    if ([[parameters objectForKey:@"blackTableSeparator"] boolValue] == YES && [AppDelegate instance].obj.preferTVPosters == NO){
+    if ([[parameters objectForKey:@"blackTableSeparator"] boolValue] && ![GlobalData getInstance].preferTVPosters){
         blackTableSeparator = YES;
         [dataList setSeparatorInset:UIEdgeInsetsZero];
         dataList.separatorColor = [Utilities getGrayColor:38 alpha:1];

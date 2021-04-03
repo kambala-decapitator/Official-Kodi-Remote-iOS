@@ -163,7 +163,7 @@ NSOutputStream	*outStream;
 -(void)checkServer{
     if (inCheck) return;
     jsonRPC=nil;
-    if ([[AppDelegate instance].obj.serverIP length] == 0){
+    if ([[GlobalData getInstance].serverIP length] == 0){
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"showSetup", nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"TcpJSONRPCShowSetup" object:nil userInfo:params];
         if ([AppDelegate instance].serverOnLine){
@@ -198,7 +198,7 @@ NSOutputStream	*outStream;
                          [AppDelegate instance].serverVersion += MRMC_TIMEWARP;
                      }
                      infoTitle=[NSString stringWithFormat:@"%@ v%@.%@ %@",
-                                          [AppDelegate instance].obj.serverDescription,
+                                          [GlobalData getInstance].serverDescription,
                                           [serverInfo objectForKey:@"major"],
                                           [serverInfo objectForKey:@"minor"],
                                           [serverInfo objectForKey:@"tag"]];//, [serverInfo objectForKey:@"revision"]

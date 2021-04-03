@@ -93,13 +93,7 @@
 
 -(void)selectServerAtIndexPath:(NSIndexPath *)indexPath{
     storeServerSelection = indexPath;
-    NSDictionary *item = [[AppDelegate instance].arrayServerList objectAtIndex:indexPath.row];
-    [AppDelegate instance].obj.serverDescription = [item objectForKey:@"serverDescription"];
-    [AppDelegate instance].obj.serverUser = [item objectForKey:@"serverUser"];
-    [AppDelegate instance].obj.serverPass = [item objectForKey:@"serverPass"];
-    [AppDelegate instance].obj.serverIP = [item objectForKey:@"serverIP"];
-    [AppDelegate instance].obj.serverPort = [item objectForKey:@"serverPort"];
-    [AppDelegate instance].obj.tcpPort = [[item objectForKey:@"tcpPort"] intValue];
+    [[AppDelegate instance] updateCurrentServerUsingListIndex:indexPath.row];
 }
 
 -(void)wakeUp:(NSString *)macAddress{
@@ -112,7 +106,7 @@
                                    iconName, @"icon_connection",
                                    nil];
     if (status == YES) {
-        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[AppDelegate instance].obj.serverIP serverPort:[AppDelegate instance].obj.tcpPort];
+        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[GlobalData getInstance].serverIP serverPort:[GlobalData getInstance].tcpPort];
         [[NSNotificationCenter defaultCenter] postNotificationName: @"XBMCServerConnectionSuccess" object:nil userInfo:params];
         [AppDelegate instance].serverOnLine=YES;
         [AppDelegate instance].serverName = infoText;
@@ -240,17 +234,17 @@
 #pragma mark - power control action sheet
 
 -(void)powerControl{
-    if ([[AppDelegate instance].obj.serverIP length]==0){
+    if ([[GlobalData getInstance].serverIP length]==0){
         [self toggleSetup];
         return;
     }
-    NSString *title=[NSString stringWithFormat:@"%@\n%@", [AppDelegate instance].obj.serverDescription, [AppDelegate instance].obj.serverIP];
+    NSString *title=[NSString stringWithFormat:@"%@\n%@", [GlobalData getInstance].serverDescription, [GlobalData getInstance].serverIP];
     UIAlertController *actionView = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     if (![AppDelegate instance].serverOnLine) {
         UIAlertAction* action_wake = [UIAlertAction actionWithTitle:NSLocalizedString(@"Wake On Lan", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-            if ([AppDelegate instance].obj.serverHWAddr != nil){
-                [self wakeUp:[AppDelegate instance].obj.serverHWAddr];
+            if ([GlobalData getInstance].serverHWAddr != nil){
+                [self wakeUp:[GlobalData getInstance].serverHWAddr];
                 UIAlertController *alertView = [Utilities createAlertOK:NSLocalizedString(@"Command executed", nil) message:nil];
                 [self presentViewController:alertView animated:YES completion:nil];
             }
@@ -388,7 +382,6 @@
     XBMCVirtualKeyboard *virtualKeyboard = [[XBMCVirtualKeyboard alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
     [self.view addSubview:virtualKeyboard];
     firstRun=YES;
-    [AppDelegate instance].obj=[GlobalData getInstance]; 
 
     int cellHeight = PAD_MENU_HEIGHT;
     int infoHeight = PAD_MENU_INFO_HEIGHT;
@@ -696,7 +689,7 @@
         if (self.tcpJSONRPCconnection == nil){
             self.tcpJSONRPCconnection = [[tcpJSONRPC alloc] init];
         }
-        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[AppDelegate instance].obj.serverIP serverPort:[AppDelegate instance].obj.tcpPort];
+        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[GlobalData getInstance].serverIP serverPort:[GlobalData getInstance].tcpPort];
     }
 }
 

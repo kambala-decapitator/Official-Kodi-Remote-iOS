@@ -10,22 +10,32 @@
 
 @implementation GlobalData
 
-@synthesize serverDescription;
-@synthesize serverUser;    
-@synthesize serverPass;    
-@synthesize serverIP;    
-@synthesize serverPort;
-@synthesize tcpPort;
-@synthesize serverHWAddr;
-@synthesize preferTVPosters;    
++ (instancetype)getInstance {
+    static GlobalData *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [GlobalData new];
+    });
+    return instance;
+}
 
-static GlobalData *instance =nil;    
-+(GlobalData *)getInstance    {    
-    @synchronized(self){    
-        if(instance==nil){    
-            instance= [GlobalData new];    
-        }    
-    }    
-    return instance;    
-}    
+- (NSString *)baseServerUrlWithProtocol:(BOOL)addProtocol credentials:(BOOL)addCredentials {
+    __auto_type url = [NSMutableString new];
+    if (addProtocol)
+        [url appendString:@"http://"];
+    if (addCredentials && self.serverUser.length > 0)
+        [url appendFormat:@"%@:%@@", self.serverUser, self.serverPass ?: @""];
+    return [url stringByAppendingFormat:@"%@:%@", self.serverIP, self.serverPort];
+}
+
+- (void)reset {
+    self.serverDescription = @"";
+    self.serverUser = @"";
+    self.serverPass = @"";
+    self.serverIP = @"";
+    self.serverPort = @"";
+    self.serverHWAddr = @"";
+    self.tcpPort = 0;
+}
+
 @end

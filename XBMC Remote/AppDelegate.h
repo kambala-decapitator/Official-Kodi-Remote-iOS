@@ -68,6 +68,8 @@
 
 + (AppDelegate *) instance;
 
+-(NSString *)baseServerImageUrl;
+-(void)updateCurrentServerUsingListIndex:(NSInteger)i;
 -(void)saveServerList;
 -(void)clearAppDiskCache;
 -(void)wake:(NSString *)macAddress;
@@ -103,6 +105,5 @@
 @property (nonatomic, assign) int APImajorVersion;
 @property (nonatomic, assign) int APIminorVersion;
 @property (nonatomic, assign) int APIpatchVersion;
-@property (nonatomic, retain) GlobalData *obj;
 
 @end

@@ -47,12 +47,7 @@
         [serverListTableView deselectRowAtIndexPath:item animated:YES];
         cell.accessoryType = UITableViewCellAccessoryNone;
         storeServerSelection = nil;
-        [AppDelegate instance].obj.serverDescription = @"";
-        [AppDelegate instance].obj.serverUser = @"";
-        [AppDelegate instance].obj.serverPass = @"";
-        [AppDelegate instance].obj.serverIP = @"";
-        [AppDelegate instance].obj.serverPort = @"";
-        [AppDelegate instance].obj.serverHWAddr = @"";
+        [[GlobalData getInstance] reset];
         [[NSNotificationCenter defaultCenter] postNotificationName: @"XBMCServerHasChanged" object: nil]; 
         NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
         if (standardUserDefaults) {
@@ -135,24 +130,8 @@
     return cell;
 }
 
-static inline BOOL IsEmpty(id obj) {
-    return obj == nil
-    || ([obj respondsToSelector:@selector(length)]
-        && [(NSData *)obj length] == 0)
-    || ([obj respondsToSelector:@selector(count)]
-        && [(NSArray *)obj count] == 0);
-}
-
 -(void)selectServerAtIndexPath:(NSIndexPath *)indexPath{
-    NSDictionary *item = [[AppDelegate instance].arrayServerList objectAtIndex:indexPath.row];
-    [AppDelegate instance].obj.serverDescription = IsEmpty([item objectForKey:@"serverDescription"]) ? @"" : [item objectForKey:@"serverDescription"];
-    [AppDelegate instance].obj.serverUser = IsEmpty([item objectForKey:@"serverUser"]) ? @"" : [item objectForKey:@"serverUser"];
-    [AppDelegate instance].obj.serverPass = IsEmpty([item objectForKey:@"serverPass"]) ? @"" : [item objectForKey:@"serverPass"];
-    [AppDelegate instance].obj.serverIP = IsEmpty([item objectForKey:@"serverIP"]) ? @"" : [item objectForKey:@"serverIP"];
-    [AppDelegate instance].obj.serverPort = IsEmpty([item objectForKey:@"serverPort"]) ? @"" : [item objectForKey:@"serverPort"];
-    [AppDelegate instance].obj.serverHWAddr = IsEmpty([item objectForKey:@"serverMacAddress"]) ? @"" : [item objectForKey:@"serverMacAddress"];
-    [AppDelegate instance].obj.preferTVPosters = [[item objectForKey:@"preferTVPosters"] boolValue];
-    [AppDelegate instance].obj.tcpPort = [[item objectForKey:@"tcpPort"] intValue];
+    [[AppDelegate instance] updateCurrentServerUsingListIndex:indexPath.row];
 }
 
 -(void)deselectServerAtIndexPath:(NSIndexPath *)indexPath{
@@ -161,14 +140,8 @@ static inline BOOL IsEmpty(id obj) {
     [serverListTableView deselectRowAtIndexPath:indexPath animated:YES];
     cell.accessoryType = UITableViewCellAccessoryNone;
     storeServerSelection = nil;
-    [AppDelegate instance].obj.serverDescription = @"";
-    [AppDelegate instance].obj.serverUser = @"";
-    [AppDelegate instance].obj.serverPass = @"";
-    [AppDelegate instance].obj.serverIP = @"";
-    [AppDelegate instance].obj.serverPort = @"";
-    [AppDelegate instance].obj.serverHWAddr = @"";
+    [[GlobalData getInstance] reset];
     [AppDelegate instance].serverOnLine = NO;
-    [AppDelegate instance].obj.tcpPort = 0;
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
     if (standardUserDefaults) {
         [standardUserDefaults setObject:[NSNumber numberWithInt:-1] forKey:@"lastServer"];
@@ -235,13 +208,7 @@ static inline BOOL IsEmpty(id obj) {
             }
             else if (storeServerSelection.row==indexPath.row){
                 storeServerSelection=nil;
-                [AppDelegate instance].obj.serverDescription = @"";
-                [AppDelegate instance].obj.serverUser = @"";
-                [AppDelegate instance].obj.serverPass = @"";
-                [AppDelegate instance].obj.serverIP = @"";
-                [AppDelegate instance].obj.serverPort = @"";
-                [AppDelegate instance].obj.serverHWAddr = @"";
-                [AppDelegate instance].obj.tcpPort = 0;
+                [[GlobalData getInstance] reset];
                 [[NSNotificationCenter defaultCenter] postNotificationName: @"XBMCServerHasChanged" object: nil];
                 [standardUserDefaults setObject:[NSNumber numberWithInt:-1] forKey:@"lastServer"];
                 [standardUserDefaults synchronize];

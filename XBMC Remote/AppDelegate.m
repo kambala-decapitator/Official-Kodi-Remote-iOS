@@ -29,7 +29,6 @@ NSMutableArray *hostRightMenuItems;
 @synthesize serverOnLine;
 @synthesize serverVersion;
 @synthesize serverMinorVersion;
-@synthesize obj;
 @synthesize playlistArtistAlbums;
 @synthesize playlistMovies;
 @synthesize playlistTvShows;
@@ -4290,11 +4289,12 @@ NSMutableArray *hostRightMenuItems;
 }
 
 -(NSURL *)getServerJSONEndPoint {
-    NSString *serverJSON = [NSString stringWithFormat:@"http://%@:%@/jsonrpc", obj.serverIP, obj.serverPort];
-    return [NSURL URLWithString:serverJSON];
+    return [NSURL URLWithString:[[[GlobalData getInstance] baseServerUrlWithProtocol:YES credentials:NO] stringByAppendingString:@"/jsonrpc"]];
 }
 
 -(NSDictionary *)getServerHTTPHeaders {
+    if (!obj.serverUser.length)
+        return @{};
     NSData *authCredential = [[NSString stringWithFormat:@"%@:%@", obj.serverUser, obj.serverPass] dataUsingEncoding:NSUTF8StringEncoding];
     NSString *base64AuthCredentials = [authCredential base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", base64AuthCredentials];
@@ -4482,6 +4482,21 @@ int Wake_on_LAN(char *ip_broadcast,const char *wake_mac){
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
     [[SDImageCache sharedImageCache] clearMemory];
+}
+
+-(NSString *)baseServerImageUrl {
+    return [[[GlobalData getInstance] baseServerUrlWithProtocol:YES credentials:NO] stringByAppendingFormat:@"/%@/", self.serverVersion > 11 ? @"image" : @"vfs"];
+}
+
+-(void)updateCurrentServerUsingListIndex:(NSInteger)i {
+    NSDictionary *item = self.arrayServerList[i];
+    __auto_type obj = [GlobalData getInstance];
+    obj.serverDescription = item[@"serverDescription"];
+    obj.serverUser = item[@"serverUser"];
+    obj.serverPass = item[@"serverPass"];
+    obj.serverIP = item[@"serverIP"];
+    obj.serverPort = item[@"serverPort"];
+    obj.tcpPort = [item[@"tcpPort"] intValue];
 }
 
 -(void)saveServerList{

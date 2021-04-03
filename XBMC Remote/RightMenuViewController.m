@@ -483,9 +483,9 @@
         else{
             NSString *command = [[[tableData objectAtIndex:indexPath.row] objectForKey:@"action"] objectForKey:@"command"];
             if ([command isEqualToString:@"System.WOL"]){
-                NSString *serverMAC = [AppDelegate instance].obj.serverHWAddr;
+                NSString *serverMAC = [GlobalData getInstance].serverHWAddr;
                 if (serverMAC != nil && ![serverMAC isEqualToString:@":::::"]){
-                    [self wakeUp:[AppDelegate instance].obj.serverHWAddr];
+                    [self wakeUp:[GlobalData getInstance].serverHWAddr];
                     [messagesView showMessage:NSLocalizedString(@"Command executed", nil) timeout:2.0 color:[Utilities getSystemGreen:0.95]];
                 }
                 else{
@@ -668,7 +668,7 @@
     menuTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:menuTableView];
 
-    if ([[AppDelegate instance].obj.serverIP length]!=0){
+    if ([[GlobalData getInstance].serverIP length]!=0){
         if (![AppDelegate instance].serverOnLine){
             [self setRightMenuOption:@"offline" reloadTableData:NO];
             addButton.enabled = NO;
@@ -900,7 +900,7 @@
             }
         }
     }
-    if ([[AppDelegate instance].obj.serverIP length]!=0) {
+    if ([[GlobalData getInstance].serverIP length]!=0) {
         infoLabel.alpha = 0;
         [self setRightMenuOption:@"offline" reloadTableData:YES];
         addButton.enabled = NO;

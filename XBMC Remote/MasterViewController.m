@@ -49,7 +49,7 @@
                                    iconName, @"icon_connection",
                                    nil];
     if (status == YES) {
-        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[AppDelegate instance].obj.serverIP serverPort:[AppDelegate instance].obj.tcpPort];
+        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[GlobalData getInstance].serverIP serverPort:[GlobalData getInstance].tcpPort];
         [[NSNotificationCenter defaultCenter] postNotificationName: @"XBMCServerConnectionSuccess" object:nil userInfo:params];
         [AppDelegate instance].serverOnLine = YES;
         [AppDelegate instance].serverName = infoText;
@@ -349,7 +349,6 @@
     self.tcpJSONRPCconnection = [[tcpJSONRPC alloc] init];
     XBMCVirtualKeyboard *virtualKeyboard = [[XBMCVirtualKeyboard alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
     [self.view addSubview:virtualKeyboard];
-    [AppDelegate instance].obj=[GlobalData getInstance];
     checkServerParams=[NSDictionary dictionaryWithObjectsAndKeys: [[NSArray alloc] initWithObjects:@"version", @"volume", nil], @"properties", nil];
     menuList.scrollsToTop = NO;
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -418,7 +417,7 @@
         if (self.tcpJSONRPCconnection == nil){
             self.tcpJSONRPCconnection = [[tcpJSONRPC alloc] init];
         }
-        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[AppDelegate instance].obj.serverIP serverPort:[AppDelegate instance].obj.tcpPort];
+        [self.tcpJSONRPCconnection startNetworkCommunicationWithServer:[GlobalData getInstance].serverIP serverPort:[GlobalData getInstance].tcpPort];
     }
 }
 

@@ -208,10 +208,7 @@
     if ([AppDelegate instance].serverVersion == 11){
         storedItemID=-1;
         [PartyModeButton setSelected:YES];
-        GlobalData *obj=[GlobalData getInstance];
-        NSString *userPassword=[obj.serverPass isEqualToString:@""] ? @"" : [NSString stringWithFormat:@":%@", obj.serverPass];
-        NSString *serverHTTP=[NSString stringWithFormat:@"http://%@%@@%@:%@/xbmcCmds/xbmcHttp?command=ExecBuiltIn&parameter=PlayerControl(Partymode('music'))", obj.serverUser, userPassword, obj.serverIP, obj.serverPort];
-        NSURL *url = [NSURL  URLWithString:serverHTTP];
+        NSURL *url = [NSURL URLWithString:[[[GlobalData getInstance] baseServerUrlWithProtocol:YES credentials:YES] stringByAppendingString:@"/xbmcCmds/xbmcHttp?command=ExecBuiltIn&parameter=PlayerControl(Partymode('music'))"]];
         [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
         playerID = -1;
         selectedPlayerID = -1;
@@ -739,19 +736,15 @@ int currentItemID;
                                  NSString *type = [[nowPlayingInfo objectForKey:@"type"] length]!=0? [nowPlayingInfo objectForKey:@"type"] : @"unknown";
                                  currentType = type;
                                  [self setCoverSize:currentType];
-                                 GlobalData *obj=[GlobalData getInstance]; 
-                                 NSString *serverURL=[NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
-                                 if ([AppDelegate instance].serverVersion > 11){
-                                     serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
-                                 }
+                                 NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
                                  NSDictionary *art = nowPlayingInfo[@"art"];
                                  NSString *thumbnailPath = art[@"poster"] ?: nowPlayingInfo[@"thumbnail"];
-                                 NSString *stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                                 NSString *stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                                  if (![lastThumbnail isEqualToString:stringURL]){
                                      if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
                                          NSString *fanart = (NSNull *)[nowPlayingInfo  objectForKey:@"fanart"] == [NSNull null] ? @"" : [nowPlayingInfo  objectForKey:@"fanart"];
                                          if (![fanart isEqualToString:@""]){
-                                             NSString *fanartURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [fanart stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                                             NSString *fanartURL = [NSString stringWithFormat:@"%@%@", serverURL, [fanart stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                                              [tempFanartImageView setImageWithURL:[NSURL URLWithString:fanartURL]
                                                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                                                             if (error == nil && image != nil){
@@ -851,7 +844,7 @@ int currentItemID;
                                      storeClearlogo = storeClearart;
                                  }
                                  if (![storeClearlogo isEqualToString:@""]){
-                                     NSString *stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [storeClearlogo stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                                     NSString *stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [storeClearlogo stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                                      [itemLogoImage setImageWithURL:[NSURL URLWithString:stringURL]];
                                      storeCurrentLogo = storeClearlogo;
                                  }
@@ -1260,7 +1253,6 @@ int currentItemID;
     if (!musicPartyMode && animTable)
         [self AnimTable:playlistTableView AnimDuration:0.3 Alpha:1.0 XPos:slideFrom];
     [activityIndicatorView startAnimating];
-    GlobalData *obj=[AppDelegate instance].obj; 
     int playlistID=playerID;
     if (forcePlaylistID)
         playlistID=0;
@@ -1306,11 +1298,9 @@ int currentItemID;
                        else {
                            [self alphaView:noFoundView AnimDuration:0.2 Alpha:0.0];
                        }
-                       NSString *serverURL;
-                       serverURL = [NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
+                       NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
                        int runtimeInMinute = 1;
                        if ([AppDelegate instance].serverVersion > 11){
-                           serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
                            runtimeInMinute = 60;
                        }
                        for (int i=0; i<total; i++) {
@@ -1354,7 +1344,7 @@ int currentItemID;
 
                            NSDictionary *art = playlistItems[i][@"art"];
                            NSString *thumbnail = art[@"poster"] ?: playlistItems[i][@"thumbnail"];
-                           NSString *stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [thumbnail stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                           NSString *stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [thumbnail stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                            NSNumber *tvshowid =[NSNumber numberWithInt:[[NSString stringWithFormat:@"%@", [[playlistItems objectAtIndex:i]  objectForKey:@"tvshowid"]]intValue]];
                            NSString *file=[NSString stringWithFormat:@"%@", [[playlistItems objectAtIndex:i] objectForKey:@"file"]];
                            [playlistData addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -1493,8 +1483,6 @@ int currentItemID;
                                      newProperties, @"properties",
                                      object, itemid,
                                      nil];
-    GlobalData *obj=[GlobalData getInstance];
-//    NSLog(@"%@ - %@", methodToCall, newParameters);
     [jsonRPC
      callMethod:methodToCall
      withParameters:newParameters
@@ -1527,11 +1515,7 @@ int currentItemID;
                          return;
                      }
                  }
-                 NSString *serverURL= @"";
-                 serverURL = [NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
-                 if ([AppDelegate instance].serverVersion > 11){
-                     serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
-                 }
+                 NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
 
                  NSString *label=[NSString stringWithFormat:@"%@",[videoLibraryMovieDetail objectForKey:[mainFields objectForKey:@"row1"]]];
                  NSString *genre=@"";
@@ -1591,10 +1575,10 @@ int currentItemID;
                  NSString *fanartURL=@"";
                  NSString *stringURL = @"";
                  if (![thumbnailPath isEqualToString:@""]){
-                     stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                     stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [thumbnailPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                  }
                  if (![fanartPath isEqualToString:@""]){
-                     fanartURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [fanartPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+                     fanartURL = [NSString stringWithFormat:@"%@%@", serverURL, [fanartPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
                  }
                  NSString *filetype=@"";
                  
@@ -1960,11 +1944,7 @@ int currentItemID;
 }
 
 -(void)updateCurrentLogo {
-    GlobalData *obj=[GlobalData getInstance];
-    NSString *serverURL=[NSString stringWithFormat:@"%@:%@/vfs/", obj.serverIP, obj.serverPort];
-    if ([AppDelegate instance].serverVersion > 11){
-        serverURL = [NSString stringWithFormat:@"%@:%@/image/", obj.serverIP, obj.serverPort];
-    }
+    NSString *serverURL = [[AppDelegate instance] baseServerImageUrl];
     if ([storeCurrentLogo isEqualToString:storeClearart]) {
         storeCurrentLogo = storeClearlogo;
     }
@@ -1972,7 +1952,7 @@ int currentItemID;
         storeCurrentLogo = storeClearart;
     }
     if (![storeCurrentLogo isEqualToString:@""]){
-        NSString *stringURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [storeCurrentLogo stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
+        NSString *stringURL = [NSString stringWithFormat:@"%@%@", serverURL, [storeCurrentLogo stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]];
         [itemLogoImage setImageWithURL:[NSURL URLWithString:stringURL] placeholderImage:itemLogoImage.image];
     }
 }
