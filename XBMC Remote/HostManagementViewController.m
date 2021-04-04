@@ -533,8 +533,14 @@ static inline BOOL IsEmpty(id obj) {
                                              selector: @selector(tcpJSONRPCConnectionError:)
                                                  name: @"tcpJSONRPCConnectionError"
                                                object: nil];
-    
-    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(selectKodiServer:)
+                                                 name: @"SelectKodiServer"
+                                               object: nil];
+}
+
+- (void)selectKodiServer:(NSNotification *)notification {
+    [self selectIndex:[NSIndexPath indexPathForRow:[notification.userInfo[@"index"] integerValue] inSection:0] reloadData:NO];
 }
 
 -(void)tcpJSONRPCConnectionError:(NSNotification *)note {

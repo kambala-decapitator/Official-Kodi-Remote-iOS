@@ -4454,6 +4454,22 @@ int Wake_on_LAN(char *ip_broadcast,const char *wake_mac){
 //    [[NSNotificationCenter defaultCenter] postNotificationName: @"UIApplicationWillEnterForegroundNotification" object: nil];
 }
 
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    __auto_type host = url.host.stringByRemovingPercentEncoding;
+    if (!host.length)
+        return YES;
+
+    __auto_type i = [self.arrayServerList indexOfObjectPassingTest:^BOOL(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [host isEqualToString:obj[@"serverDescription"]] || [host isEqualToString:obj[@"serverIP"]];
+    }];
+    if (i != NSNotFound) {
+        // at launch the notification below won't be delivered because HostManagementViewController isn't initialized yet
+        [NSUserDefaults.standardUserDefaults setInteger:i forKey:@"lastServer"];
+        [NSNotificationCenter.defaultCenter postNotificationName:@"SelectKodiServer" object:nil userInfo:@{@"index": @(i)}];
+    }
+    return YES;
+}
+
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event{
     if(event.type == UIEventSubtypeMotionShake){
         [[NSNotificationCenter defaultCenter] postNotificationName: @"UIApplicationShakeNotification" object: nil]; 
