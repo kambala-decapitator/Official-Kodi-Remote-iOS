@@ -360,7 +360,7 @@
             int port = ntohs(socketAddress->sin_port);
             if (addressStr && port){
                 descriptionUI.text = [service name];
-                ipUI.text = [NSString stringWithFormat:@"%s", addressStr];
+                ipUI.text = service.hostName ?: [NSString stringWithFormat:@"%s", addressStr];
                 portUI.text = [NSString stringWithFormat:@"%d", port];
                 [descriptionUI setTextColor:[Utilities getSystemBlue]];
                 [ipUI setTextColor:[Utilities getSystemBlue]];
