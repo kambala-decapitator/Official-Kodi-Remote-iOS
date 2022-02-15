@@ -15,6 +15,8 @@
 #import "UIImageView+WebCache.h"
 #import "Utilities.h"
 
+#include "test_fmt.h"
+
 #include <arpa/inet.h>
 #include <net/if.h>
 #include <ifaddrs.h>
@@ -436,6 +438,7 @@
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
+    test_fmt();
     // Load user defaults, if not yet set. Avoids need to check for nil.
     [self registerDefaultsFromSettingsBundle];
     

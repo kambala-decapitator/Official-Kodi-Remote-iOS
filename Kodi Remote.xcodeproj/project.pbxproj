@@ -96,6 +96,7 @@
 		0FEE08161704819A00EC9BC7 /* FloatingHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FEE08151704819A00EC9BC7 /* FloatingHeaderFlowLayout.m */; };
 		1A6742E9168479FD00E8D5AF /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A6742E8168479FC00E8D5AF /* MasterViewController.xib */; };
 		1A9786C01683D87800B4F3F8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A9786C21683D87800B4F3F8 /* Localizable.strings */; };
+		ACCBC14D27BBBBA1000A16E1 /* test_fmt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACCBC14B27BBBBA1000A16E1 /* test_fmt.cpp */; };
 		C703692927148CEF0049F9BF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C703692827148CEF0049F9BF /* StoreKit.framework */; };
 		C718444625FFD06400F5A060 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C718444525FFD06300F5A060 /* SafariServices.framework */; };
 		C7478BF9257258E700161C1E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7478BF8257258E700161C1E /* Launch Screen.storyboard */; };
@@ -281,6 +282,8 @@
 		8ED18E7A16B572D700CA03F4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8ED18E7B16B572D700CA03F4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		ACCBC14627BBB259000A16E1 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		ACCBC14B27BBBBA1000A16E1 /* test_fmt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = test_fmt.cpp; sourceTree = "<group>"; };
+		ACCBC14C27BBBBA1000A16E1 /* test_fmt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_fmt.h; sourceTree = "<group>"; };
 		B1FF37DE1709D1EB005473FF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		B1FF37DF1709D1ED005473FF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C703692827148CEF0049F9BF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -525,6 +528,8 @@
 				0F554C21151D197F007E633F /* nib */,
 				0FCCA21717B25F07000FF09C /* Images.xcassets */,
 				C7478BF8257258E700161C1E /* Launch Screen.storyboard */,
+				ACCBC14B27BBBBA1000A16E1 /* test_fmt.cpp */,
+				ACCBC14C27BBBBA1000A16E1 /* test_fmt.h */,
 			);
 			path = "XBMC Remote";
 			sourceTree = "<group>";
@@ -822,6 +827,7 @@
 				0F4019B018F3ECEB0064E4DC /* customButton.m in Sources */,
 				0FDC891A170DCAEA00419F58 /* UIScrollView+SVPullToRefresh.m in Sources */,
 				0F680CB917103DB60092298A /* ClearCacheView.m in Sources */,
+				ACCBC14D27BBBBA1000A16E1 /* test_fmt.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
