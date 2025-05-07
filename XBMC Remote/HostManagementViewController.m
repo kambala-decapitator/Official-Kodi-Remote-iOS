@@ -597,7 +597,9 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if ([userDefaults objectForKey:@"lastServer"] != nil) {
         NSInteger lastServer = [userDefaults integerForKey:@"lastServer"];
+        [AppDelegate.instance appendLog:[NSString stringWithFormat:@"HostMVC: lastServer=%ld, arrayServerList.count=%lu", lastServer, AppDelegate.instance.arrayServerList.count]];
         if (lastServer > -1 && lastServer < AppDelegate.instance.arrayServerList.count) {
+            [AppDelegate.instance appendLog:@"HostMVC: lastServer is valid"];
             NSIndexPath *lastServerIndexPath = [NSIndexPath indexPathForRow:lastServer inSection:0];
             if (!AppDelegate.instance.serverOnLine) {
                 [self selectIndex:lastServerIndexPath reloadData:NO];
@@ -607,7 +609,11 @@
                 [self selectServerAtIndexPath:lastServerIndexPath];
                 [serverListTableView selectRowAtIndexPath:lastServerIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             }
+        } else {
+            [AppDelegate.instance appendLog:@"HostMVC: lastServer is invalid!"];
         }
+    } else {
+        [AppDelegate.instance appendLog:@"HostMVC: lastServer missing!"];
     }
     
     // If there is no host saved at all, enter "add host" automatically

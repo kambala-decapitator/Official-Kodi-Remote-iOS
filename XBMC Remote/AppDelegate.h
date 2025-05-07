@@ -87,6 +87,7 @@
 - (NSURL*)getServerJSONEndPoint;
 - (NSDictionary*)getServerHTTPHeaders;
 - (NSArray*)action_album;
+- (void)appendLog:(NSString*)text;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) CustomNavigationController *navigationController;

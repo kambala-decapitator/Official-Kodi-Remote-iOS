@@ -21,6 +21,9 @@
 #include <ifaddrs.h>
 
 @implementation AppDelegate
+{
+    NSFileHandle* _fh;
+}
 
 @synthesize window = _window;
 @synthesize navigationController = _navigationController;
@@ -430,7 +433,7 @@
     
     // Set interface style for window
     [self setInterfaceStyleFromUserDefaults];
-    
+
     NSString *filemodeVideoType = @"video";
     NSString *filemodeMusicType = @"music";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -6119,13 +6122,24 @@
         @[menu_Music,   [self getGlobalSearchTab:menu_Music   label:LOCALIZED_STR(@"Albums")]], // Albums
         @[menu_Music,   [self getGlobalSearchTab:menu_Music   label:LOCALIZED_STR(@"All songs")]], // Songs
     ];
-    
+
+    __auto_type f = [self.dataFilePath stringByAppendingPathComponent:@"log.txt"];
+    _fh = [NSFileHandle fileHandleForWritingAtPath:f];
+    if (!_fh) {
+        [[NSFileManager defaultManager] createFileAtPath:f contents:nil attributes:nil];
+        _fh = [NSFileHandle fileHandleForWritingAtPath:f];
+    }
+    [_fh seekToEndOfFile];
+    [self appendLog:@"--- start ---"];
+
     // Load last Kodi server. Will be taken up by tcpJSONRPC heartbeat when controllers are initialized
     if ([userDefaults objectForKey:@"lastServer"] != nil) {
         NSInteger lastServer = [userDefaults integerForKey:@"lastServer"];
+        [self appendLog:[NSString stringWithFormat:@"AD: lastServer=%ld, arrayServerList.count=%lu", lastServer, self.arrayServerList.count]];
         if (lastServer > -1 && lastServer < AppDelegate.instance.arrayServerList.count) {
             NSIndexPath *lastServerIndexPath = [NSIndexPath indexPathForRow:lastServer inSection:0];
             NSDictionary *item = AppDelegate.instance.arrayServerList[lastServerIndexPath.row];
+            [self appendLog:[NSString stringWithFormat:@"AD: lastServer item: %@", item]];
             AppDelegate.instance.obj.serverDescription = item[@"serverDescription"];
             AppDelegate.instance.obj.serverUser = item[@"serverUser"];
             AppDelegate.instance.obj.serverPass = item[@"serverPass"];
@@ -6134,9 +6148,13 @@
             AppDelegate.instance.obj.serverPort = [Utilities getServerPort:item[@"serverPort"]];
             AppDelegate.instance.obj.serverHWAddr = item[@"serverMacAddress"];
             AppDelegate.instance.obj.tcpPort = [Utilities getTcpPort:item[@"tcpPort"]];
+        } else {
+            [self appendLog:@"AD: lastServer is invalid!"];
         }
+    } else {
+        [self appendLog:@"AD: lastServer missing!"];
     }
-    
+
     // Initialize controllers
     self.serverName = LOCALIZED_STR(@"No connection");
     if (IS_IPHONE) {
@@ -6150,6 +6168,11 @@
         self.window.rootViewController = self.windowController;
     }
     return YES;
+}
+
+- (void)appendLog:(NSString*)text {
+    __auto_type dateStr = [NSDateFormatter localizedStringFromDate:[NSDate new] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle];
+    [_fh writeData:[[NSString stringWithFormat:@"[%@] %@\n", dateStr, text] dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (BOOL)isMenuEntryEnabled:(NSString*)menuItem {
@@ -6283,17 +6306,32 @@
     }
 }
 
+- (void)applicationWillResignActive:(UIApplication*)application {
+    [self appendLog:@"--- WillResignActive ---"];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication*)application {
+    [self appendLog:@"--- DidEnterBackground ---"];
+    [_fh synchronizeFile];
+}
+
 - (void)applicationWillEnterForeground:(UIApplication*)application {
     [self setIdleTimerFromUserDefaults];
+    [self appendLog:@"--- WillEnterForeground ---"];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication*)application {
+    [self appendLog:@"--- DidBecomeActive ---"];
     // Trigger Local Network Privacy Alert once after app launch
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         LocalNetworkAlertClass *localNetworkAlert = [LocalNetworkAlertClass new];
         [localNetworkAlert triggerLocalNetworkPrivacyAlert];
     });
+}
+
+- (void)applicationWillTerminate:(UIApplication*)application {
+    [self appendLog:@"--- WillTerminate ---"];
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication*)application {
