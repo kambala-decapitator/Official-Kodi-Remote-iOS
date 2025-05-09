@@ -6173,6 +6173,7 @@
 - (void)appendLog:(NSString*)text {
     __auto_type dateStr = [NSDateFormatter localizedStringFromDate:[NSDate new] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle];
     [_fh writeData:[[NSString stringWithFormat:@"[%@] %@\n", dateStr, text] dataUsingEncoding:NSUTF8StringEncoding]];
+    NSLog(@"[log] %@", text);
 }
 
 - (BOOL)isMenuEntryEnabled:(NSString*)menuItem {
@@ -6181,6 +6182,7 @@
 }
 
 - (NSURL*)getServerJSONEndPoint {
+    [self appendLog:[NSString stringWithFormat:@"serverIP='%@', serverPort='%@'", obj.serverIP, obj.serverPort]];
     if (!obj.serverIP || !obj.serverPort) {
         return nil;
     }
