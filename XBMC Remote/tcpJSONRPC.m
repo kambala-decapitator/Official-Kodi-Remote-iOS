@@ -58,6 +58,7 @@ NSInputStream *inStream;
 }
 
 - (void)startServerHeartbeat {
+    [AppDelegate.instance appendLog:@"startServerHeartbeat"];
     // Check for Local Network Access rights as we now attempt to connect to Kodi.
     [Utilities checkLocalNetworkAccess];
     
