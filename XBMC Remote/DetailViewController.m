@@ -784,12 +784,7 @@
     NSString *results = @"";
     NSUInteger numResult = self.filteredListContent.count;
     if (numResult > 0) {
-        if (numResult > 1) {
-            results = LOCALIZED_STR_ARGS(@"%lu results", numResult);
-        }
-        else {
-            results = LOCALIZED_STR(@"1 result");
-        }
+        results = LOCALIZED_STR_ARGS(@"%lu results", numResult);
     }
     return results;
 }

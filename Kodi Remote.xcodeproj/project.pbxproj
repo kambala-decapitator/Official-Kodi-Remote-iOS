@@ -56,6 +56,7 @@
 		0FEA79FC165FBBED00BB281F /* XBMCVirtualKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FEA79FB165FBBEC00BB281F /* XBMCVirtualKeyboard.m */; };
 		0FEAE76816EA632800387DED /* ActorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FEAE76716EA632800387DED /* ActorCell.m */; };
 		0FEE08161704819A00EC9BC7 /* FloatingHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FEE08151704819A00EC9BC7 /* FloatingHeaderFlowLayout.m */; };
+		AC37E9A52E8926F100E90383 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = AC37E9A32E8926F100E90383 /* Localizable.stringsdict */; };
 		C7106D792D33C25400A96C93 /* BroadcastProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7106D782D33C25400A96C93 /* BroadcastProgressView.m */; };
 		C7106D7B2D33EEE000A96C93 /* ProgressBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7106D7A2D33EEE000A96C93 /* ProgressBarView.m */; };
 		C7106D842D33FBCE00A96C93 /* PlaylistProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7106D832D33FBCE00A96C93 /* PlaylistProgressView.m */; };
@@ -264,6 +265,7 @@
 		1A9786C31683D8E900B4F3F8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8ED18E7A16B572D700CA03F4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8ED18E7B16B572D700CA03F4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AC37E9A42E8926F100E90383 /* ru-ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "ru-ru"; path = "ru-ru.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
 		B1FF37DE1709D1EB005473FF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		B1FF37DF1709D1ED005473FF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C703692827148CEF0049F9BF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -588,6 +590,7 @@
 		0F554901151D1187007E633F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				AC37E9A32E8926F100E90383 /* Localizable.stringsdict */,
 				0F554902151D1187007E633F /* Kodi Remote-Info.plist */,
 				0F554903151D1187007E633F /* InfoPlist.strings */,
 				0F554906151D1187007E633F /* main.m */,
@@ -813,6 +816,8 @@
 				"uk-UA",
 				"gl-ES",
 				"bs-BA",
+				"ru-ru",
+				"ru-RU",
 			);
 			mainGroup = 0F5548EB151D1187007E633F;
 			productRefGroup = 0F5548F7151D1187007E633F /* Products */;
@@ -850,6 +855,7 @@
 				C76594B12C5E874100B93A2A /* RightMenuViewController.xib in Resources */,
 				C76594B22C5E880900B93A2A /* Settings.bundle in Resources */,
 				C76594B72C5E8A5B00B93A2A /* PrivacyInfo.xcprivacy in Resources */,
+				AC37E9A52E8926F100E90383 /* Localizable.stringsdict in Resources */,
 				C76594B32C5E882C00B93A2A /* Images.xcassets in Resources */,
 				C76594B42C5E883300B93A2A /* InfoPlist.strings in Resources */,
 				C76594B52C5E883A00B93A2A /* Localizable.strings in Resources */,
@@ -1001,6 +1007,14 @@
 				C772AD2B2E675D8300435181 /* bs-BA */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		AC37E9A32E8926F100E90383 /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AC37E9A42E8926F100E90383 /* ru-ru */,
+			);
+			name = Localizable.stringsdict;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
